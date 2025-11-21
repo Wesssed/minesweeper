@@ -15,7 +15,7 @@
 struct Field {
     int size_y;
     int size_x;
-    
+
     int start_y;
     int start_x;
 
@@ -30,12 +30,6 @@ void field_get_size(struct Field *field, int *size_y, int *size_x){
     *size_y = field -> size_y;
     *size_x = field -> size_x;
 }
-void field_parse(struct Field *field, int *size_y, int *size_x, int ***field_real){
-    *size_y = field -> size_y;
-    *size_x = field -> size_x;
-    *field_real = field -> real;
-}
-
 
 int check_bombs(int **field_real, int size_y, int size_x, int pos_y, int pos_x){
     if (field_real[pos_y][pos_x] == BOMB) return BOMB;
@@ -140,6 +134,7 @@ void field_generate(struct Field *field, int size_y, int size_x){
     field -> size_x = size_x;
     
     field -> real = malloc( sizeof(int*) * size_y );
+    field -> mask = malloc( sizeof(int*) * size_y );
 
     int** field_real = field -> real;
     int** field_mask = field -> mask;
@@ -169,10 +164,29 @@ void field_init(struct Field *field, int size_y, int size_x, int bombs_count,int
     field_set_marks(field);
 }
 int main(){
-   struct Field field;
 
+    #ifdef DEBUG
+        printf("[DEBUG] Field.c started \n");
+    #endif
+
+   
+
+    #ifdef DEBUG
+        printf("[DEBUG] Initializing random\n");
+    #endif
     rand_init();
+
+    #ifdef DEBUG
+        printf("[DEBUG] Creating and initializing game field\n");
+    #endif
+    struct Field field;
+
     field_init(&field,9, 9, BOMBS_COUNT,3, 4);
+
+    #ifdef DEBUG
+        printf("[DEBUG] Game field initialized successfully\n");
+    #endif
+
     field_print(&field, true);
     field_print(&field, false);
 }
